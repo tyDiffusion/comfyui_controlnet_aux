@@ -162,10 +162,12 @@ def draw_handpose(canvas: np.ndarray, keypoints: Union[List[Keypoint], None]) ->
     if not keypoints:
         return canvas
     
-    if not is_normalized(keypoints):
-        H, W = 1.0, 1.0
-    else:
-        H, W, _ = canvas.shape
+    #if not is_normalized(keypoints):
+    #    H, W = 1.0, 1.0
+    #else:
+    #    H, W, _ = canvas.shape
+        
+    H, W, _ = canvas.shape #our input values are always normalized, even though they may exceed range of 0,1
 
     edges = [[0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6], [6, 7], [7, 8], [0, 9], [9, 10], \
              [10, 11], [11, 12], [0, 13], [13, 14], [14, 15], [15, 16], [0, 17], [17, 18], [18, 19], [19, 20]]
