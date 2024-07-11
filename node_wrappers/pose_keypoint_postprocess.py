@@ -7,6 +7,7 @@ from PIL import ImageColor
 from einops import rearrange
 import torch
 import itertools
+from PIL import Image
 
 from ..src.controlnet_aux.dwpose import draw_poses, draw_animalposes, decode_json_as_poses
 
@@ -286,21 +287,28 @@ class RenderPeopleKps:
     RETURN_TYPES = ("IMAGE",)
     FUNCTION = "render"
     CATEGORY = "ControlNet Preprocessors/Pose Keypoint Postprocess"
+    
+    #OUTPUT_IS_LIST = (True, )
 
     def render(self, kps, render_body, render_hand, render_face) -> tuple[np.ndarray]:
-        if isinstance(kps, list):
-            kps = kps[0]
-
-        poses, _, height, width = decode_json_as_poses(kps)
-        np_image = draw_poses(
-            poses,
-            height,
-            width,
-            render_body,
-            render_hand,
-            render_face,
-        )
-        return (numpy2torch(np_image),)
+    
+        imgs = []
+        for j in range(len(kps)):            
+            theKps = kps[j]
+            poses, _, height, width = decode_json_as_poses(theKps)
+            np_image = draw_poses(
+                poses,
+                height,
+                width,
+                render_body,
+                render_hand,
+                render_face,
+            )
+            
+            image = torch.from_numpy(np_image.astype(np.float32) / 255.0)[None, ]            
+            imgs.append(image)     
+                
+        return (torch.cat(imgs, dim=0), )
 
 class RenderAnimalKps:
     @classmethod
