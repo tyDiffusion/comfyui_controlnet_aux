@@ -93,10 +93,14 @@ def draw_bodypose(canvas: np.ndarray, keypoints: List[Keypoint]) -> np.ndarray:
     Note:
         The function expects the x and y coordinates of the keypoints to be normalized between 0 and 1.
     """
-    if not is_normalized(keypoints):
-        H, W = 1.0, 1.0
-    else:
-        H, W, _ = canvas.shape
+    #if not is_normalized(keypoints):
+    #    H, W = 1.0, 1.0
+    #else:
+    #    H, W, _ = canvas.shape
+        
+    H, W, _ = canvas.shape #our input values are always normalized, even though they may exceed range of 0,1
+
+    stickwidth = 4
 
     stickwidth = 4
 
